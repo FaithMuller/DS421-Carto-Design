@@ -67,7 +67,7 @@ On this website: <https://firms.modaps.eosdis.nasa.gov/usfs/active_fire/#firms-s
 -   Now you will be able to read the file in with the code below
 
 ```{r}
-wildfire_shp_data <- st_read(here("data/LANDSAT_USA_contiguous_and_Hawaii_7d/LANDSAT_USA_contiguous_and_Hawaii_7d.shp"))
+wildfire_shp_data <- st_read("data/LANDSAT_USA_contiguous_and_Hawaii_7d/LANDSAT_USA_contiguous_and_Hawaii_7d.shp")
 ```
 
 This dataset contains point geometries where fires were detected. Important columns include:
@@ -83,7 +83,9 @@ This dataset contains point geometries where fires were detected. Important colu
 Use ggplot to create a line plot of fires with the day on the x axis and number of fires on the y axis
 
 ```{r}
-
+fires_by_confidence <- wildfire_shp_data %>% 
+  group_by(CONFIDENCE) %>% 
+  summarise(number_of_fire = n())
 ```
 
 ------------------------------------------------------------------------
@@ -93,7 +95,9 @@ Use ggplot to create a line plot of fires with the day on the x axis and number 
 Use ggplot to create a stacked bar chart colored by category with numer of fires on the y axis for each day
 
 ```{r}
-
+ggplot(data = fires_by_confidence, aes(x = CONFIDENCE, y = number_of_fire, fill = CONFIDENCE))+
+  geom_bar(stat = "identity")+
+  theme_classic(1)
 ```
 
 ## 📏 Map Fire Points by Confidence Level
@@ -237,7 +241,35 @@ Download the LANDSAT 30m CSV for USA (Conterminous) and Hawaii at the bottom rig
 -   Map the data with any package you would like, just make sure there is at least a slight difference from the examples above, be as creative as possible while utilizing your critical thinking
 
 ```{r}
+wildfire_csv_data <- read_csv("data/LANDSAT_USA_contiguous_and_Hawaii_7d.csv")
+```
 
+```{r}
+wildfire_sf <- st_as_sf(wildfire_csv_data, coords = c("latitude", "longitude"),crs=4326)
+```
+
+```{r}
+# Format the date
+wildfire_sf <- wildfire_sf %>%
+  mutate(acq_date = as.Date(acq_date)) %>%
+  filter(!is.na(acq_date))
+```
+
+```{r}
+# Basic map
+wildfire_sf <- st_transform(wildfire_sf, st_crs(usa))
+p <- ggplot() +
+  geom_sf(data = usa, fill = "gray90", color = "gray70") +  # basemap layer
+  geom_sf(data = wildfire_sf, aes(color = confidence), alpha = 0.6) +
+coord_sf(xlim = c(-125, -66), ylim = c(24, 50)) +
+  theme_minimal()
+  # labs(title = "Wildfires in the USA and Hawaii",
+  #      subtitle = "Date: {frame_time}",
+  #      color = "Size (log scale)",
+  #      size = "Size") +
+  # transition_time(acq_date) +
+  # ease_aes('linear')
+p
 ```
 
 ## ✨ Summary
