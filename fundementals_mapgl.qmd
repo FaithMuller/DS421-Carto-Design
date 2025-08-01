@@ -234,6 +234,8 @@ How does your choice affect the message your map conveys?
 
 Write 1–2 sentences reflecting on the **cartographic message** your choices imply.
 
+When switching to step_equal_interval( ) and step_jenks( ) could be both balanced. For equal interval, it could be balanced visually because it divides the range into evenly spaced numeric breaks. For Jenks, it could be balanced contextually/statistically because groups similar values together naturally.
+
 ------------------------------------------------------------------------
 
 ## Question: What is the poverty line for a household in Hawaii?
@@ -406,9 +408,6 @@ mapboxgl(bounds = ca_income) |>
     type = "continuous"
   )
 
-```
-
-```         
 ```
 
 🔍 Try: - Changing the variable to median home value- Switching the state (e.g., "HI", "NY", "TX") - Using a different styling function
