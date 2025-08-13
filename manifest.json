@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "title": "MPA Inventory — mapgl (MapLibre)",
+  "description": "An interactive Shiny app that visualizes NOAA Marine Protected Area (MPA) polygons using MapLibre via the {mapgl} package. Users can filter by state/territory, protection level, or site name, and view popups with site details.",
+  "author": "Your Name",
+  "license": "MIT",
+  "primary_r_file": "app.R",
+  "r_dependencies": [
+    "shiny",
+    "bslib",
+    "sf",
+    "dplyr",
+    "mapgl",
+    "here",
+    "viridisLite",
+    "glue"
+  ],
+  "app_mode": "shiny",
+  "content_category": "application",
+  "language": "R"
+}
